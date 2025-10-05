@@ -60,7 +60,7 @@
       <ellipse cx="200" cy="305" rx="110" ry="23" fill="#5b3622" opacity="0.55"/>
       <!-- Corps du gâteau (chocolat) -->
       <ellipse cx="200" cy="240" rx="110" ry="60" fill="#2d1810"/>
-            <rect x="90" y="160" width="220" height="80" fill="#2d1810"/>
+      <rect x="90" y="160" width="220" height="80" fill="#2d1810"/>
       <!-- dessus -->
       <ellipse cx="200" cy="160" rx="110" ry="60" fill="#43231f"/>
       <!-- Cerises Forêt Noire -->
@@ -73,8 +73,21 @@
     </svg>
     <div id="message">Fais un voeu avant de souffler tes bougies !</div>
     <div class="tuto">
-      Indice : 🪇 !<br/>
+      Indice : 🪇 !
     </div>
+  </div>
+  <!-- Cadeau caché puis affiché après extinction des bougies -->
+  <div id="cadeau" style="display:none; text-align:center; margin-top:20px;">
+    <div style="font-size:1.2em; color:#43231f; margin-bottom:15px; font-weight:bold;">
+      Un cadeau sauvage est apparu !
+    </div>
+    <img 
+      src="gift.png"
+      alt="Cadeau"
+      style="width:80px; cursor:pointer; transition:transform 0.2s;"
+      id="img-cadeau"
+    />
+    <div id="gain" style="display:none; margin-top:18px;"></div>
   </div>
   <script>
     const NB_BOUGIES = 16;
@@ -89,7 +102,6 @@
         const angle = (i / NB_BOUGIES) * 2 * Math.PI;
         const bx = cx + rayon * Math.cos(angle - Math.PI/2);
         const by = cy + 0.6 * rayon * Math.sin(angle - Math.PI/2);
-        // Bougie et flamme
         node.innerHTML += `
         <g>
           <rect x="${bx-5}" y="${by-33}" width="10" height="26" fill="#fff" stroke="#a4a4b7" rx="3"/>
@@ -121,7 +133,7 @@
     });
     animerFlammes();
 
-    // Extinction
+    // Extinction des flammes + apparition du cadeau
     function eteindreBougies() {
       document.getElementById('message').textContent = "Bravo, toutes les bougies sont éteintes ! 🎉";
       for (let i = 0; i < NB_BOUGIES; i++) {
@@ -131,7 +143,10 @@
           flamme.style.opacity = "0";
         }
       }
+      document.getElementById('cadeau').style.display = 'block';
     }
+
+    // Rallume tout + cache le cadeau et gain
     function rallumerBougies() {
       document.getElementById('message').textContent = "Secoue ton téléphone pour souffler les bougies !";
       for (let i = 0; i < NB_BOUGIES; i++) {
@@ -141,6 +156,9 @@
           flamme.style.opacity = "1";
         }
       }
+      document.getElementById('cadeau').style.display = 'none';
+      document.getElementById('gain').style.display = 'none';
+      document.getElementById('gain').innerHTML = '';
     }
     let lastShake = 0;
     let alreadyOff = false;
@@ -165,6 +183,18 @@
         rallumerBougies();
         alreadyOff = false;
       }
+    });
+
+    // Affiche le gain Corvette + meme au clic sur le cadeau
+    document.getElementById("img-cadeau").addEventListener("click", function() {
+      document.getElementById('gain').style.display = 'block';
+      document.getElementById('gain').innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:center;gap:18px;">
+          <img src="corvette-removebg-preview.png" style="width:180px; border-radius:10px; box-shadow:0 0 12px #222a;" alt="Corvette"/>
+          <img src="gmk-removebg-preview.png" style="width:100px; border-radius:10px; box-shadow:0 0 9px #222a;" alt="Meme"/>
+        </div>
+        <div style="font-size:1.3em; margin-top:10px; color:#43231f;">Félicitations ! Tu as gagné une corvette aberrante ! 🚗🎉</div>
+      `;
     });
   </script>
 </body>
